@@ -1,9 +1,19 @@
 #!/bin/bash
 
+set -x
+set -e
+
 if [ ! -f /config/server.conf ]; then
     # initialization
 
+    if [ ! -d "/config" ]; then
+        mkdir /config
+    fi
+
     cd /config
+
+    export EASYRSA='/etc/easy-rsa'
+    export EASYRSA_PKI='/config/pki'
     if [ ! -d "pki" ]; then
         echo "generating pki"
         easyrsa init-pki
@@ -30,7 +40,6 @@ tls-crypt tc.key
 topology subnet
 duplicate-cn
 server 10.81.0.0 255.255.255.0
-ifconfig-pool-persist ipp.txt
 push \"redirect-gateway def1 bypass-dhcp\"
 push \"dhcp-option DNS 128.52.130.209\"
 keepalive 10 60
@@ -48,7 +57,7 @@ $SCRAMBLE_LINE" > server.conf
         echo "found public IP address $PUBLIC_ADDRESS"
     fi
 
-    for i in `seq 10`; do
+    for i in `seq 1`; do
         echo "generating client $i config"
         EASYRSA_CERT_EXPIRE=3650 easyrsa build-client-full client${i} nopass
         echo "client
@@ -70,10 +79,10 @@ verb 3
 $(cat pki/ca.crt)
 </ca>
 <cert>
-$(cat pki/issued/client.crt)
+$(cat pki/issued/client${i}.crt)
 </cert>
 <key>
-$(cat pki/private/client.key)
+$(cat pki/private/client${i}.key)
 </key>
 <tls-crypt>
 $(cat tc.key)
@@ -81,5 +90,8 @@ $(cat tc.key)
 $SCRAMBLE_LINE" > client${i}.ovpn
     done
 fi
+
+mkdir /dev/net
+mknod /dev/net/tun c 10 200
 
 openvpn --config /config/server.conf
