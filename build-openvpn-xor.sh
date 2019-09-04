@@ -3,10 +3,10 @@
 # compile using all cores
 sed -i -E -e "s/^#?MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/" /etc/makepkg.conf
 
-# allow nobody to run sudo with no password
+# allow 'nobody' to run sudo with no password
 echo 'nobody ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-# run makepkg as nobody because root is not allowed to run makepkg
+# run makepkg as 'nobody' because root is not allowed to run makepkg
 sudo -u nobody /bin/bash -c "$(cat <<EOF
 
 git clone https://aur.archlinux.org/openvpn-xor-git /tmp/openvpn-xor-git

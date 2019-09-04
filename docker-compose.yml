@@ -1,8 +1,16 @@
 version: '3'
 services:
   openvpn-xor:
+    image: xmb5/docker-ovpn-xor
     build: .
-    ports:
-      - 1194:1194
     volumes:
-      - ./config:/config
+      - './config:/config' # stores the server config file and all client configs
+    cap_add:
+      - 'NET_ADMIN'
+    ports:
+      - '1195:1194/tcp' # outer:inner
+    environment:
+      - 'NUM_CLIENT_CONFIGS=25'
+      - 'SCRAMBLE=0'
+      - 'PUBLIC_ADDRESS=10.0.0.198' # leave blank to automatically get public IPv4 address
+      - 'PUBLIC_PORT=1195'
