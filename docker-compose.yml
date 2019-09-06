@@ -2,7 +2,6 @@ version: '3'
 services:
   openvpn-xor:
     image: xmb5/docker-ovpn-xor
-    build: .
     volumes:
       - './config:/config' # stores the server config file and all client configs
     cap_add:
