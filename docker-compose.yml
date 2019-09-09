@@ -1,11 +1,12 @@
 version: '3'
 services:
   openvpn-xor:
-    image: xmb5/docker-ovpn-xor
+    image: 'xmb5/docker-ovpn-xor'
     volumes:
       - './config:/config' # stores the server config file and all client configs
     cap_add:
       - 'NET_ADMIN'
+    restart: 'always'
     ports:
       - '1194:1194/tcp' # outer:inner
     environment:
