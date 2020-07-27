@@ -1,5 +1,6 @@
 # docker-ovpn-xor
 Easy OpenVPN server setup with docker.
+Currently OpenVPN 2.4.9.
 
 ## Setup
 Make a copy of [docker-compose.yml](docker-compose.yml) and change the options however you want.
